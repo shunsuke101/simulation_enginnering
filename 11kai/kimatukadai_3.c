@@ -1,21 +1,21 @@
 #include<stdio.h>
-#include<math.h>
+
 #define J 32 //空間xの分割数
-#define N 512 //時間tの分割数発散するかしないかはここにかかわるN=512で収束、N=256で発散
+#define N 300 //時間tの分割数N=300発散、N=320で収束
 #define T 0.1 //時間の上限
 
 #define C 8.92e+3 //波動方程式の係数
 
 
 void main(){
-  double u0[J+1], u1[J+1], u2[J+1];
+  double u0[J+1], u1[J+1], u2[J+1]; /*uの番号はtの前後関係、配列はx座標を表す0が一番古い、2が一番新しい*/
   double x, t, dx=1.0/(double)J, dt=T/(double)N;
-  double mu=C*dt*dt/(dx*dx);
+  double mu=(C*dt*dt)/(dx*dx);
   int j, n;
-
+ 
   // ---- 初期条件 ----
   for (j = 0; j <= J; j++) {
-	x = j * dx;
+	x = (double)j * dx;
         if (x <= 0.5)
             u0[j] = x;
         else
@@ -28,20 +28,11 @@ void main(){
     for(j=1;j<J;j++){
 	    u1[j]=u0[j];
     }
+    printf("# x t u");
 
-
-  printf("%d",J+1); /*xの分割数を出力*/
-  /*分割されたx座標を出力*/
   for(j=0;j<=J;j++){
     x=(double)j*dx;
-    printf(" %e",x);
-  }
-  printf("\n");
-
-  printf("0.0");/*t=0.0の時のuの座標を出力*/
-  for(j=0;j<=J;j++){
-    x=(double)j*dx;
-    printf(" %e", u0[j]);
+    printf("%e 0.0 %e\n",x,u0[j]);
   }
   printf("\n");
 
@@ -57,10 +48,12 @@ void main(){
     }
 
     t=(double)n*dt;
-    printf("%e", t);
     u0[0]=0;
     u0[J]=0;
-    for(j=0;j<=J;j++) printf(" %e", u0[j]);
+    for(j=0;j<=J;j++){
+	x=(double)j*dx;
+	printf("%e %e %e\n",x,t,u0[j]);
+    }
     printf("\n");
   }
 }

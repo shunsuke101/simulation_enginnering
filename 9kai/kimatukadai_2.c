@@ -1,14 +1,14 @@
 #include <stdio.h>
 
-#define J 16
-#define A 1.19e-4
+#define J 16	  //空間の分割数
+#define A 1.12e-4  //熱拡散率
 #define T 1000.0   // 最終時間
-#define N 50   // 時間分割数：ここを変えるとdtが変わる（発散/非発散の切替）
+#define N 60   // 時間分割数：ここを変えるとdtが変わる（発散/非発散の切替）
 
 int main() {
     double u0[J+1], u1[J+1];
     double x, t, dx = 1.0 / (double)J, dt = T / (double)N;
-    double r = A * dt / (dx * dx);
+    double r =(A * dt)/(dx * dx);
     int j, n;
 
 
@@ -25,17 +25,10 @@ int main() {
     u0[J] = 0.0;
 
     // ---- x座標の出力 ----
-    printf("%d", J + 1);
     for (j = 0; j <= J; j++) {
-        x = j * dx;
-        printf(" %e", x);
+        x = (double)j * dx;
+        printf("%e 0.0 %e\n",x,u0[j]);
     }
-    printf("\n");
-
-    // ---- 初期時刻 t=0 ----
-    printf("0.0");
-    for (j = 0; j <= J; j++)
-        printf(" %e", u0[j]);
     printf("\n");
 
     // ---- 時間ステップ ----
@@ -54,10 +47,12 @@ int main() {
 
         // 出力
         t = n * dt;
-        printf("%e", t);
         for (j = 0; j <= J; j++)
-   	    printf(" %e", u0[j]);
-        printf("\n");
+	{
+		x = (double)j * dx;
+   	    	printf("%e %e %e\n",x,t,u0[j]);
+	}
+	printf("\n");
     }
     return 0;
 }
